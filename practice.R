@@ -60,3 +60,6 @@ c(x,y)
 
 append(x,15)
 x
+
+df1 <- data.frame(x=c(2,4,6), y=c("a","b","c"))
+View(df1)
