@@ -1,3 +1,5 @@
+library(dplyr)
+
 #summary : 최소, 최대, 평균, 중앙값, 1사분위수, 3사분위수
 #mean : 평균
 #sd : 표준편차
@@ -21,16 +23,20 @@ library(tidyverse)
 
 #변환순위 : 문자형 > 숫자형 > 논리형
 
+
+# 벡터의 생성 : 함수 c()
 x <- c(TRUE,FALSE,TRUE)
 y1 <- c(1L, 2L, 3L)
 y2 <- c(1.1, 3.5, 10.4)
 z <- c("one", "two", "three")
 
+# 벡터의 구성요소 : typeof
 typeof(x)
 typeof(y1)
 typeof(y2)
 typeof(z)
 
+#벡터의 길이 : length
 length(y1)
 a <- 1; a
 c(1, "1", TRUE)
@@ -63,3 +69,42 @@ x
 
 df1 <- data.frame(x=c(2,4,6), y=c("a","b","c"))
 View(df1)
+
+append(x, 15, after=2) #두번째 데이터 뒤에 들어감(3번째에 들어감)
+
+append(x,y)
+append(x,y, after=3)
+
+1:5
+-3:3
+1.5:5.4
+5:0
+seq(from=0,to=5)
+seq(from=0,to=5, by=2)
+seq(from=0,by=2, length=3)
+seq(3)
+seq(-3)
+
+seq(from=2, by=3, length=4)
+seq(from=9, to=45, by=9)
+c(seq(from=1,to=7,by=2), seq(from=2,to=8,length=4))
+
+rep(1, times=3)
+rep(1:3, times=2)
+rep(c("M","F"),times=c(2,3))
+rep(1:3, each=2)
+rep(1:3, each=2, times=2)
+rep(1:3, length=6)
+rep(1:3, length=5)
+rep(1:3, each = 2, length=8)
+
+x <- c("Park", "Lee", "Kwon")
+
+#문자열 구성하는 문자 개수
+nchar(x)
+nchar("응용통계학과")
+
+# paste : 문자열의 결합
+paste("모든","사람에게는","통계적","사고능력이","필요하다.")
+paste("모든","사람에게는","통계적","사고능력이","필요하다.", sep="-")
+paste("모든","사람에게는","통계적","사고능력이","필요하다.", sep="")
