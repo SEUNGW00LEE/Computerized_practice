@@ -705,7 +705,55 @@ a3 <- gsub("-","",a2)
 x <- c(10.4,5.6,3.1,6.4,21.7)
 x_mean <- sum(x)/length(x)
 mean(x)
-x_sd <- sqrt(sum((x -mean(x))/(length(x)-1)))
+x_sd <- sqrt(sum((x -mean(x))^2/(length(x)-1)))
 sd(x)
 x_sd
 
+x_diff <- x[2:length(x)] -x[1:length(x)-1]
+x_diff
+diff(x)
+
+####
+#11#
+####
+
+y <- c(17,16,20,24,22,15,21,18)
+y[y==max(y)]
+y[y==max(y)] <- 23
+
+sum(y > 20)
+mean(y < 18)  
+####
+#12#
+####
+score <- c(85,91,75,69,52,95,88,100)
+
+
+grade <- cut(score,breaks=c(0,60,70,80,90,100),
+                labels = c("F","D","C","B","A"),
+             include.lowest = TRUE, right=FALSE)
+grade
+score
+data.frame(score, grade)
+####
+#13#
+####
+X <- matrix(c(1,3,2,7,12,6,1,3,6,6,7), nrow=1)
+
+Y <- matrix(c(6.1,9.7,10.3,18.8,28.3,16.1,5.7,12.6,16.1,15.8,18.8), nrow=1)
+
+####
+#14#
+####
+
+A <- list(mat=matrix(c(1.2,2.5,3.1,1.5,2.7,3.2,2.1,2.1,2.8),nrow=3), df=data.frame(x1=c("Park","Lee","Kim"), x2=c(14,16,21)))
+A
+
+rownames(A$mat) <- paste0("Sub",1:3)
+colnames(A$mat) <- paste0("Trt", 1:3)
+colnames(A$df) <- c("name","sales")
+A
+?mean
+rowMeans(A$mat)
+mean(A$df[2])
+colMeans(A$df[2])
