@@ -55,7 +55,7 @@ x <- scan()
 x
 y <- scan(what="character")
 #Seoul suwon
-#'New York'
+#'New York'  # 자료에 인용부호를 사용하나 안사용하나 결과는 같음
 y
 #[1] "Seoul"    "suwon"    "New York"
 
@@ -79,32 +79,55 @@ append(x,y, after=3)
 -3:3
 1.5:5.4
 5:0
-seq(from=0,to=5)
-seq(from=0,to=5, by=2)
-seq(from=0,by=2, length=3)
-seq(3)
-seq(-3)
+seq(from=0,to=5) #0부터 5까지 1씩 증가, 0 1 2 3 4 5
+seq(from=0,to=5, by=2) #0부터 5까지 2씩 증가, 0 2 4
+seq(from=0,by=2, length=3) #0부터 2씩 증가, 3개, 0 2 4
+seq(3) #숫자만 입력되면 1부터 시작, 1씩 증가/감소
+seq(-3) 
 
-seq(from=2, by=3, length=4)
-seq(from=9, to=45, by=9)
+seq(from=2, by=3, length=4) #2 5 8 11
+seq(from=9, to=45, by=9) #9 18 27 36 45
 c(seq(from=1,to=7,by=2), seq(from=2,to=8,length=4))
+# 1 3 5 7 2 4 6 8
 
-rep(1, times=3)
-rep(1:3, times=2)
-rep(c("M","F"),times=c(2,3))
-rep(1:3, each=2)
-rep(1:3, each=2, times=2)
-rep(1:3, length=6)
-rep(1:3, length=5)
-rep(1:3, each = 2, length=8)
+rep(1, times=3) # 1 1 1
+rep(1:3, times=2) # 1 2 3 1 2 3 
+rep(c("M","F"),times=c(2,3)) #M M F F F
+rep(1:3, each=2) #1 1 2 2 3 3 
+rep(1:3, each=2, times=2) #1 1 2 2 3 3 1 1 2 2 3 3 
+rep(1:3, length=6) # 1 2 3 1 2 3 
+rep(1:3, length=5) # 1 2 3 1 2 
+rep(1:3, each = 2, length=8) # 1 1 2 2 3 3 1 1 
 
-x <- c("Park", "Lee", "Kwon")
+x <- c("Park", "Lee", "Kwon") 
 
 #문자열 구성하는 문자 개수
-nchar(x)
-nchar("응용통계학과")
+nchar(x) #4 3 4 
+nchar("응용통계학과") # 6
 
 # paste : 문자열의 결합
 paste("모든","사람에게는","통계적","사고능력이","필요하다.")
 paste("모든","사람에게는","통계적","사고능력이","필요하다.", sep="-")
 paste("모든","사람에게는","통계적","사고능력이","필요하다.", sep="")
+
+paste("원주율은", pi, "이다")
+paste("Stat", 1:3, sep="")
+paste0("Stat", 1:3)
+# paste( ~, sep="") = paste0(~)
+paste(c("Stat","Math"), 1:3, sep="-")
+#[1] "Stat-1" "Math-2" "Stat-3"
+#letters:알파벳 소문자
+#LETTERS:알파벳 대문자
+
+letters
+LETTERS
+
+paste0(letters, collapse = "")
+paste0(LETTERS, collapse = ",")
+paste0(LETTERS, sep = ",")
+# sep : 여러 개 문자형 벡터들 결합에 작용 --> 하나하나 따로 만듬
+# collapse : 단일 문자형 벡터의 결합에 작용 --> 하나에 다 만듬
+
+#substr (x, start, stop) : start, stop : 정수형 스칼라 또는 벡터(대응되는 숫자끼리 시작점과 끝점 구성)
+
+
