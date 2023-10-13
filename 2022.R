@@ -4,9 +4,10 @@ ff=data.frame(c("2018-02-08","2018-01-05"),
               c("2018-02-16","2018-01-07"))
 #1번 정답
 #a
-data.frame(DAYS=paste(c(as.numeric(as.Date(ff[[2]][1])) - as.numeric(as.Date(ff[[1]][1])) + 1,as.numeric(as.Date(ff[[2]][2])) - as.numeric(as.Date(ff[[1]][2])) + 1),"days"))
+data.frame(DAYS=paste(c((as.Date(ff[[2]][1])) - as.numeric(as.Date(ff[[1]][1])) + 1,as.numeric(as.Date(ff[[2]][2])) - as.numeric(as.Date(ff[[1]][2])) + 1),"days"))
 #b
-data.frame(DAYS=paste(c(as.numeric(difftime(as.Date(ff[[2]]),as.Date(ff[[1]])))+1),"days"))
+data.frame(DAYS=c(as.Date(ff[[2]]) - as.Date(ff[[1]]))+1)
+
 #2번 문제
 qqq=list(matrix(c("a","b","c","d"),nrow=2),b1=c(1,2))
 
@@ -47,3 +48,14 @@ y=8:6
 
 #5번 정답
 tibble(w= ee$x, y, z= abs(ee$x-y))
+
+#1
+data.frame(DAYS=c(as.Date(ff[[2]])-as.Date(ff[[1]])+1))
+#2
+paste(qqq[[1]][,1],qqq[[2]],sep="")
+#3
+sum(q1[c(-length(q1),-(length(q1)-1))]<q1[c(-1,-2)])
+#4
+sum(bb<c(1:length(bb)))-1
+#5
+tibble(w=ee$x, y, z=abs(y-ee$x))
