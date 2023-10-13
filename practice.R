@@ -29,7 +29,7 @@ x <- c(TRUE,FALSE,TRUE)
 y1 <- c(1L, 2L, 3L)
 y2 <- c(1.1, 3.5, 10.4)
 z <- c("one", "two", "three")
-
+x
 # 벡터의 구성요소 : typeof
 typeof(x)
 typeof(y1)
@@ -84,7 +84,7 @@ seq(from=0,to=5, by=2) #0부터 5까지 2씩 증가, 0 2 4
 seq(from=0,by=2, length=3) #0부터 2씩 증가, 3개, 0 2 4
 seq(3) #숫자만 입력되면 1부터 시작, 1씩 증가/감소
 seq(-3) 
-
+?seq
 seq(from=2, by=3, length=4) #2 5 8 11
 seq(from=9, to=45, by=9) #9 18 27 36 45
 c(seq(from=1,to=7,by=2), seq(from=2,to=8,length=4))
@@ -217,8 +217,8 @@ c(1,2,3,4,5,6) + c(1,2,3)
 
 abs(-3) #절대값
 sqrt(25)
-ceiling(3.4513) #작지않은 가작 작은 정수 == 내림
-floor(3.123123) #크지않은 가장 큰 정수 == 올림
+ceiling(3.4513) #작지않은 가작 작은 정수 == 올림
+floor(3.123123) #크지않은 가장 큰 정수 == 내림
 trunc(5.99) #소수점 버림
 round(3.4512,2) #소수점 2자리 반올림
 
@@ -381,7 +381,7 @@ cat.x
 
 # breaks : 구간의 최소값, 최대값을 포함한 구간 설정 벡터
 # right : TRUE - a < x <= b 
-#         FALSE - a<= x < b
+#         FALSE - a< x < b
 # inclue.lowest : 구간의 최소값 또는 최대값을 포함시킬지
 # - include.lowest=T min <= x <= b (right = TRUE)
 # - include.lowest=T min <= x < b (right = FALSE)
@@ -393,8 +393,7 @@ cut(x, breaks=c(0,80,90,100), include.lowest = TRUE,
 
 x <- as.Date(c("2017-01-01", "2018-01-01"))
 x
-typeof(x)
-x[2]- x[1]
+
 
 s1 <- as.Date("2018-03-01")
 e1 <- as.Date("2018-03-31")
@@ -470,8 +469,9 @@ x <- c(10,20)
 x
 diag(x)
 diag(2)
-
+diag(3)
 A
+solve(A)
 solve(A) %*% A
 # solve 역행렬 A-1
 b<- c(5,6)
@@ -512,6 +512,7 @@ df1[c(1,2),]
 # with(dataframe, 명령문)
 airquality
 z.Temp <- (Temp-mean(Temp))/sd(Temp)
+#Error: object 'Temp' not found
 z.Temp <- (airquality$Temp-mean(airquality$Temp))/sd(airquality$Temp)
 z.Temp <- with(airquality, (Temp-mean(Temp))/sd(Temp))
 
@@ -573,6 +574,7 @@ View(mtcars_t)
 x <- list(a=c("one","two","three"), b=1:3, c=list(-1,-5), d=data.frame(x1=c("s1","s2"), x2=1:2))
 typeof(x)
 typeof(x$d)
+x
 # list[a]: 결과는 리스트
 # list[[a]] = list$a : 해당되는 구성요소의 객체 구조
 x[1]
@@ -753,7 +755,7 @@ rownames(A$mat) <- paste0("Sub",1:3)
 colnames(A$mat) <- paste0("Trt", 1:3)
 colnames(A$df) <- c("name","sales")
 A
-?mean
+
 rowMeans(A$mat)
 mean(A$df[2])
 colMeans(A$df[2])
