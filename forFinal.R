@@ -528,4 +528,403 @@ car
 car %>% filter(MPG.highway==max(MPG.highway)) %>% 
   dplyr::select(c(make,MPG.highway))
 
+#------------------------------------------------------------------------------#
 
+######
+##4###
+######
+
+ggplot(data=mpg) +
+  geom_point(mapping=aes(x=displ,y=hwy), color="blue")
+
+ggplot(data=mpg) +
+  geom_point(mapping=aes(x=displ,y=hwy,color="blue"))
+
+pp <- mpg %>% 
+  filter(class != "2seater") %>% 
+  ggplot() +
+  geom_point(mapping = aes(x=displ,y=hwy))
+pp+ facet_wrap(~class)
+pp+ facet_wrap(~class, ncol=2)
+pp+ facet_wrap(~class, ncol=2, dir="v")
+## facet_grid
+# - 한 변수에 의한 faceting:
+#   하나의 행으로 패널 배치: facet_grid(. ~ x) 하나의 열로 패널 배치: facet_grid(x ~ .)
+# - 두 변수에 의한 faceting: facet_grid(y ~ x) 행 범주: 변수 y의 범주
+# 열 범주: 변수 x의 범주
+# (y~x): 행~ 열 (.~x):1행~ 열 (x~.): 행~1열
+my_plot <- mpg %>% 
+  filter(cyl != 5, drv != "r") %>% 
+  ggplot() + 
+  geom_point(mapping=aes(x=displ,y=hwy))
+my_plot
+my_plot + facet_grid(drv ~ .)
+my_plot + facet_grid(. ~ cyl)
+my_plot + facet_grid(drv ~ cyl)
+
+ggplot(data=mpg) +
+  geom_point(mapping=aes(x=displ,y=hwy))
+
+ggplot(data=mpg) +
+  geom_smooth(mapping=aes(x=displ,y=hwy)) # 비모수 회귀곡선
+
+ggplot(data=mpg)+
+  geom_point(mapping=aes(x=displ,y=hwy)) +
+  geom_smooth(mapping=aes(x=displ,y=hwy))
+  
+ggplot(data=mpg, mapping=aes(x=cty,y=hwy))+
+  geom_point(position='jitter')
+
+ggplot(data=mpg, mapping=aes(x=cty,y=hwy))+
+  geom_jitter(width=0.4, height=0.05)
+
+ggplot(data=mpg, mapping=aes(x=cty,y=hwy))+
+  geom_jitter(width=0.05, height=0.4)
+mpg
+mpg_1 <- mpg %>% 
+  mutate(am=substr(trans,1,nchar(trans)-4)) %>% 
+  filter(cyl!=5)
+mpg_1
+p_1 <- ggplot(data=mpg_1,
+              mapping=aes(x=as.factor(cyl), fill=am)) +
+  xlab("Number of Cylinders")
+p_1 + geom_bar()
+# position=“stack”, “dodge”, “dodge2”, “fill” 
+# 디폴트 : stack, 수직누적
+
+p_1 + geom_bar(position="dodge")
+p_1 + geom_bar(position="dodge2")
+p_1 + geom_bar(position="fill")
+p_1 + geom_bar(position="stack")
+
+ggplot(data=mpg_1, mapping=aes(x=as.factor(cyl),y=hwy)) +
+  geom_boxplot() +
+  xlab("Number of Cylinders")
+
+ggplot(data=mpg_1, mapping=aes(x=cyl,y=hwy)) +
+  geom_boxplot() +
+  xlab("Number of Cylinders")
+
+ggplot(data=mpg_1, mapping=aes(x=as.factor(cyl), y=hwy)) +
+  geom_boxplot(mapping=aes(fill=am)) +
+  xlab("Number of Cylinders")
+
+ggplot(data=mpg_1, mapping=aes(x=as.factor(cyl),y=hwy)) +
+  geom_boxplot() +
+  facet_wrap(~am)
+
+## 좌표계 : Coordinate system
+# coord_cartesian : xy 축 범위 조정 : xlim, ylim
+
+p <- ggplot(data=mpg, mapping=aes(x=displ, y=hwy)) +
+  geom_point() + geom_smooth()
+p
+p + coord_cartesian(xlim=c(3,6))
+
+# scale 함수의 일반적인 형태: scale_*1*_*2*()
+# *1*: 수정하고자 하는 시각적 요소; color, x, y, fill 등등 
+# *2*: 적용되는 scale 지칭; discrete, continuous 등등
+#' ex) scale_x_continuous(limits=c(3,6))
+#' scale_x_continuous(name="Engine")
+
+p + xlim(3,6) + xlab("Engine Displacement") #범위 벗어난 자료 삭제
+p + coord_cartesian(xlim=c(3,6)) +
+  xlab("Engine Displacement")
+
+ggplot(data=mpg, mapping=aes(x=class, y=hwy)) +
+  geom_boxplot() +
+  coord_flip()
+
+ggplot(data=mpg,mapping=aes(x="",y=hwy)) +
+  geom_boxplot() +
+  xlab("") +
+  coord_flip()
+
+
+#------------------------------------------------------------------------------#
+
+#1
+
+library(lattice)
+
+
+# 1-1)
+ggplot(data=barley, mapping=aes(x=variety,y=yield,color=year)) +
+  geom_point() +
+  coord_flip() -> p
+
+p + facet_wrap(~site)
+
+# 1-2
+
+ggplot(data=barley, mapping=aes(x=variety, y=yield, color=site, shape=year)) +
+  geom_point() +
+  coord_flip()
+
+# 1-3
+
+barley %>% 
+  group_by(variety) %>% 
+  summarise(mean_yield = mean(yield)) %>% 
+  arrange(desc(.))
+
+#2 - 1
+
+mpg %>% 
+  group_by(fl) %>% 
+  count()
+
+#2 - 2
+
+mpg %>% 
+  group_by(fl) %>% 
+  filter(!(fl %in% c('c','e','d'))) %>% 
+  ggplot(mapping=aes(x=fl)) +
+  geom_bar(aes(y=..count../sum(..count..))) +
+  ylab("prop")
+#2-3
+mpg %>% 
+  group_by(fl) %>% 
+  filter(!(fl %in% c('c','e','d'))) %>% 
+  ungroup() %>% 
+  group_by(trans) %>% 
+  summarise(n=n())
+
+#2-4
+mpg %>% 
+  group_by(fl) %>% 
+  filter(!(fl %in% c('c','e','d'))) %>% 
+  ungroup() %>% 
+  mutate(am = substr(trans,1,nchar(trans)-4)) %>% 
+  ggplot(mapping=aes(x=fl,fill=am)) +
+  geom_bar(position='fill')
+
+#2-5
+
+mpg %>% 
+  group_by(fl) %>% 
+  filter(!(fl %in% c('c','e','d'))) %>% 
+  ungroup() %>% 
+  ggplot(mapping=aes(x=fl,y=hwy)) +
+  geom_boxplot()
+#2-6
+
+mpg %>% 
+  group_by(fl) %>% 
+  filter(!(fl %in% c('c','e','d'))) %>% 
+  ungroup() %>% 
+  mutate(am = substr(trans,1,nchar(trans)-4)) %>% 
+  ggplot(mapping=aes(x=fl,y=hwy)) +
+  geom_boxplot() +
+  coord_flip() +
+  facet_wrap(~am, dir="v")
+
+# 3-1
+
+airquality %>% 
+  group_by(Month) %>% 
+  mutate(Missing = is.na(Ozone)) %>% 
+  ggplot(mapping=aes(x=Month,fill=Missing)) +
+  geom_bar(position="fill")
+
+#3-2
+airquality %>% 
+  group_by(Month) %>% 
+  summarise(mean_oz = mean(Ozone,na.rm=TRUE)) %>% 
+  ggplot(mapping = aes(x=Month)) +
+  geom_bar(stat='identity',aes(y=mean_oz), position="dodge2")
+
+#3-3 ####모르겠다!! 이게 최선인데
+
+airquality %>% 
+  mutate(cat_temp = case_when(
+    Temp >= mean(Temp)  ~ "High Temp",
+    Temp < mean(Temp) ~ "Low Temp"),
+    cat_wind=case_when(
+      Wind >= mean(Wind) ~ "High Wind",
+      Wind < mean(Wind) ~ "Low Wind"
+    )) %>% 
+  ggplot(mapping=aes(x=Solar.R,y=Ozone)) +
+  geom_point() +
+  facet_wrap(~cat_temp + cat_wind)
+
+#4-1
+mtcars
+mtcars %>%
+  rownames_to_column(var="model") %>% 
+  as_tibble() %>% 
+  dplyr::select(c(model,mpg,disp,wt)) %>% 
+  arrange(mpg,desc(disp)) -> mtcars_t
+
+#4-2
+
+mtcars_t %>% 
+  mutate(gp_wt=ifelse(wt>median(wt),"Heavy","Not Heavy")) %>% 
+  ggplot(mapping=aes(x=disp,y=mpg,color=gp_wt)) +
+  geom_point() +
+  geom_smooth(method="lm",se=FALSE)
+
+#4-3
+
+mtcars_t %>% 
+  mutate(gp_wt=ifelse(wt>median(wt),"Heavy","Not Heavy")) %>% 
+  ggplot(mapping=aes(x=disp,y=mpg)) +
+  geom_point() +
+  geom_smooth(method="lm",se=FALSE) +
+  facet_wrap(~gp_wt)
+
+#5
+mpg
+mpg %>% 
+  filter(cyl == 4) %>% 
+  mutate(year=as.factor(year)) %>% 
+  dplyr::select(c(model,year,displ,cty,hwy)) %>% 
+  arrange(year,desc(displ),cty)
+
+
+#------------------------------------------------------------------------------#
+
+#####
+# 5 #
+#####
+
+CI_mean<-function(x,conf=0.95){
+  m <- mean(x)
+  se <- sd(x) / sqrt(length(x))
+  alpha <- 1 -conf
+  c(m-qnorm(1-alpha/2)*se,m+qnorm(1-alpha/2)*se)
+}
+
+set.seed(12345679)
+x <- rnorm(n=100)
+CI_mean(x)
+CI_mean(x, conf=0.90)
+
+# ... : 함수의 마지막 변수로 지정, 기존의 함수를 이용하여 함수를 정의하는 경우 매우 유용함
+y <- c(x,NA)
+y
+CI_mean(y)
+CI_mean(y,na.rm=TRUE) #error 발생
+CI_mean_dot <- function(x,conf=0.95,...){
+  m <- mean(x,...)
+  se <- sd(x,...) / sqrt(sum(!is.na(x)))
+  alpha <- 1 -conf
+  c(m-qnorm(1-alpha/2)*se,m+qnorm(1-alpha/2)*se)
+}
+CI_mean_dot(y,na.rm=TRUE)
+
+CI_mean_dot1 <- function(x,conf=0.95,aa=F){
+  m <-mean(x,na.rm=aa)
+  se <- sd(x,na.rm=aa)/sum(!is.na(x))
+  alpha <- 1- conf
+  c(m-qnorm(1-alpha/2)*se, m+qnorm(1-alpha/2)*se)
+}
+
+CI_mean_dot1(y,aa=T)
+
+ CI_mean_dot2 <- function(x,conf=0.95,na.rm=F){
+  m <- mean(x,na.rm=na.rm)
+  se <- sd(x,na.rm=na.rm)/sqrt(sum(!is.na(x)))
+  alpha <- 1-conf
+  c(m-qnorm(1-alpha/2)*se, m+qnorm(1-alpha/2)*se)
+}
+ x=c(1,3,5,7,9,NA)
+ CI_mean_dot2(x,na.rm=T)
+
+my_plot <- function(x,y, ...){
+  z_x <- (x-mean(x))/sd(x)
+  z_y <- (y-mean(y))/sd(y)
+  ggplot(data.frame(x=z_x,y=z_y)) +
+    geom_point(aes(x,y),...)
+}
+ 
+library(ggplot2)
+with(cars, my_plot(x=speed,y=dist,shape=20,color="red",size=2))
+
+my_power <- function(first,second){first^second}
+my_power(second=5,first=2)
+my_power(s=5,f=2)
+my_power(2,5)
+
+# return 에 의한 출력, return 없으면 마지막 표현식의 실행결과
+
+my_desc <- function(x,...){
+  m.x <- mean(x,...); sd.x <- sd(x,...)
+  res <- list(mean=m.x,sd=sd.x)
+  return(res)
+}
+
+with(cars, my_desc(x=dist))
+with(airquality, my_desc(x=Ozone, na.rm=TRUE))
+
+find_roots <- function(a,b,c){
+  if(a==0){
+    roots <- c("Not quadratic eqation")
+  } else{
+    D <- b^2-4*a*c
+    
+    if (D > 0){
+      roots <- c((-b+sqrt(D))/2*a,(-b-sqrt(D))/2*a)
+    } else if (D==0){
+      roots <- -b / (2*a)
+    } else {
+      roots = c("No real root")
+    }
+  }
+  return(roots)
+}
+find_roots(1,4,3)
+
+
+### ifelse(조건, 표현식1, 표현식2)
+
+x <- c(10,3,6,9)
+y <- c(1,5,4,12)
+ifelse(x>y,x,y)
+
+score <- c(80,75,40,98)
+#예: 주어진 점수가 50미만이면 ‘Fail’, 50 이상이면 ‘Pass’를 점수와 함께 출력
+
+grade <- ifelse(score<50,"Fail","Pass")
+data.frame(score, grade)
+
+#switch : switch(표현식, 선택항목리스트)
+rm(list=ls())
+(x <- sample(1:3,1))
+switch(x, "Park","Lee","Kim")
+switch("aa", aa="bb",bb="aa")
+
+#예: 주어진 자료의 특성을 보고, 자료의 대푯값으로 평균과 중앙값 중 선택하는 함수 작성
+rm(list=ls())
+my_center <- function(x,type){
+  switch(type, mean=mean(x), med=median(x))
+}
+
+x <- c(1,2,3,4,50)
+my_center(x,"med")
+my_center(x,"mean")
+
+# & , | : vector의 element 별로 조건 체크
+# &&, || : vector의 첫번째 값만 체크
+
+x=c(1,2,5,7,8)
+y=c(3,7,5,2,1)
+w=2
+u=7
+(x>2) & (y>3)
+(x>2) && (y>3)
+(w>2) & (u>3)
+(w>2) && (u>3)
+(x>2) | (y>3)
+(x>2) || (y>3)
+
+x=runif(1)-0.5;x
+if(x<0) print(abs(x))
+
+if(x<0) print(abs(x)) else print(x)
+
+ifelse(x<0, abs(x),x)
+
+ifelse(x<0, c("x is negative"),c("x is positive"))
+
+if(x>=-0.5 && x <=0.5) print(x) else print("wrong number")
