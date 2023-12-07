@@ -1,59 +1,3 @@
-#' chapter 3
-
-library(readr)
-
-#' read_table2
-
-read_table2()
-read_table2("*.txt", col_types="dcd")
-
-#' read_table2 option
-
-#' col_types : 자료 유형을 나타냄 : c(문자형),i(정수형),d(실수형),n(숫자형),l(논리형),f(요인),D(날짜)
-#' 변수 이름 없으면 반드시 col_names 사용 , col_names+FALSE : X1,X2, ...
-#' comment : 주석의 기호 지정 (#으로 쓰여져있으면 comment = "#")
-#' skip : 무시할 행의 개수
-#' na : 결측값이 NA가 아닌 다른 기호로 입력된 경우 (ex: na= "-")
-#' ex: na=c(".","NA") --> .와 NA 모두 결측값으로 입력
-
-#' read_csv()
-#' 규칙(문자로시작하고 중간에 빈칸이 없어야함)에 어긋나는 변수에 ``적용
-#' col_types, comment, skip, na 옵션 동일하게 작동
-
-#' read_fwf()
-#' 고정 포맷 파일 불러오기
-#' (ex)
-#' 24M2000
-#' 35F3100
-#' 28F3800
-#' 21F2800
-#' read_fwf(".txt", 
-#'    col_position=fwf_widths(widths=c(2,1,4),
-#'    col_names=c("age","gender","income"))
-#' )
-#' or
-#' read_fwf(".txt",
-#'    col_position = fwf_positions(start= c(1,3,4),
-#'                                 end = c(2,3,7),
-#'                                 col_names=c("age","gender","income"))
-#' )
-#' 
-#' 데이터 프레임 --> 외부로 저장
-#' 
-#' write_delim : 빈칸으로 구분
-#' write_csv : comma 구분
-#' write_txv : tap 으로 구분
-#' 
-#' excel 파일 불러오기
-#' library(xlsx) : read_xlsx
-#' library(readxl) : read_excel
-#' 
-#' sas 파일 불러오기
-#' library(haven) : read_sas
-#' 
-#' html 테이블 불러오기 
-#' library(rvest) : read_html, hteml_nodes, hteml_table
-
 #' chapter 4
 
 #' %>% 
@@ -928,3 +872,69 @@ ifelse(x<0, abs(x),x)
 ifelse(x<0, c("x is negative"),c("x is positive"))
 
 if(x>=-0.5 && x <=0.5) print(x) else print("wrong number")
+
+for(i in 1:5){print(i)}
+
+res <- vector("double", 5)
+for(i in seq_along(res)){
+  res[i] <- mean(rnorm(10))
+}
+round(res,3)
+
+my_desc <- function(x, fun){fun(x)}
+x <- rnorm(2000000000)
+my_desc(x, mean)
+my_desc(x, median)
+
+# lapply(), sapply()
+# lapply() : 결과 리스트
+# sapply() : 결과가 벡터 또는 행렬
+
+x <- list(a1=1:5, a2=rnorm(5), a3=c(TRUE,FALSE,TRUE,TRUE))
+
+lapply(x,mean)
+sapply(x,mean)
+unlist(lapply(x,mean))
+
+set.seed(1234)
+m <- -2:2
+i = 1
+res <- vector("double", length(m))
+
+for (i in seq_along(res)){
+  res[i] <- mean(rnorm(n=19, mean=m[i], sd=0.5))
+}
+res
+
+y <- lapply(m, rnorm, n=10,sd=0.5)
+sapply(y,mean)
+
+#margin : 1 = 행방향, 2 = 열방향
+
+A <- matrix(c(0.8,1.3,1.0, 1.1, 1.3, 1.3, 0, 1.2, 0.2, 0.6, 1.4, 0.6), nrow=3)
+rownames(A) <- c("Park", "Lee", "Kim")
+colnames(A) <- paste0("trial", 1:4)
+
+apply(A,1,mean)
+apply(A,1,range)
+apply(A,2,mean)
+
+data(Cars93, package = "MASS")
+with(Cars93, tapply(MPG.city, Origin, mean))
+Cars93
+with(Cars93, tapply(MPG.city,Origin,mean,simplify = FALSE))
+
+x_g <- with(Cars93, split(MPG.city, Origin))
+str(x_g)
+labbply(x_g,mean)
+#split(A,B) : A를 B의 값 별로 분리
+rm(list=ls())
+library(dplyr)
+data(Cars93, package = "MASS")
+Cars93
+Cars93 %>% 
+  group_by(Origin) %>% 
+  summarise(m=mean(MPG.city), n=n())
+
+
+
