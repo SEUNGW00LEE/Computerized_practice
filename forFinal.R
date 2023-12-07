@@ -1,4 +1,6 @@
-#' chapter 4
+######
+##4###
+######
 
 #' %>% 
 #' x %>%  f() -> f(x)
@@ -242,7 +244,7 @@ air_M %>% slice_max(Ozone, n=1)
 air_M %>% slice_min(Ozone, n=1)
 
 #n() : 행 개수 계산, cur_data() : 각 그룹별 데이터를 따로 불러옴
-
+library(dplyr)
 mpg %>% group_by(cyl) %>% summaray(data=cur_data())
 
 # skip! 혹시 몰라서 회귀모델
@@ -388,7 +390,7 @@ air_sub2 %>% as_tibble() %>%
   group_by(Month) %>% 
   summarise(n = n(), m_oz=mean(Ozone, na.rm=TRUE), m_solar = mean(Solar.R,na.rm=TRUE))
 rm(list=ls())
-#     2.
+#2.
 #1)
 mtcars %>% rownames_to_column(var="model") %>% as_tibble()
 
@@ -475,7 +477,7 @@ car %>% filter(MPG.highway==max(MPG.highway)) %>%
 #------------------------------------------------------------------------------#
 
 ######
-##4###
+##6###
 ######
 
 ggplot(data=mpg) +
@@ -729,7 +731,7 @@ mpg %>%
 #------------------------------------------------------------------------------#
 
 #####
-# 5 #
+# 7 #
 #####
 
 CI_mean<-function(x,conf=0.95){
@@ -800,6 +802,13 @@ my_desc <- function(x,...){
 
 with(cars, my_desc(x=dist))
 with(airquality, my_desc(x=Ozone, na.rm=TRUE))
+
+my_desc_1 <- function(x,...){
+  m.x <- mean(x,...); sd.x <- sd(x,...)
+  list(mean=m.x,sd=sd.x)
+}
+
+with(cars, my_desc_1(x=dist))
 
 find_roots <- function(a,b,c){
   if(a==0){
@@ -876,15 +885,79 @@ if(x>=-0.5 && x <=0.5) print(x) else print("wrong number")
 for(i in 1:5){print(i)}
 
 res <- vector("double", 5)
+res
 for(i in seq_along(res)){
   res[i] <- mean(rnorm(10))
 }
+res
 round(res,3)
 
 my_desc <- function(x, fun){fun(x)}
-x <- rnorm(2000000000)
+x <- rnorm(2000)
 my_desc(x, mean)
 my_desc(x, median)
+
+#' while과 for의 차이점
+#' for : 반복횟수 고정, while: 조건이 만족되는동안 반복
+
+i = 1
+while(i<=5){
+  print(i)
+  i = i + 1
+}
+
+fac.x <- 1
+i <- 1
+while(i <= 5){
+  fac.x <- fac.x * i
+  cat(i, "!=", fac.x, "\n", sep="")
+  i <- i + 1
+}
+
+sum.x=0
+i=1
+while(i<=5){
+  sum.x = sum.x+i
+  cat("sum to ",i," = ",sum.x,"\n",sep="")
+  i = i + 1
+}
+
+sum.x=0
+x=c(1,1,1,8,7,6)
+k=length(x)
+i = 1
+while(i <= k){
+  sum.x=sum.x+x[i]
+  i = i + 1
+}
+sum.x/k
+
+sum.x=0
+i=1
+while(i<=10){
+  if( i %in% c(2,4,6,8,10)){
+    sum.x = sum.x + 2*i
+  }
+  else{
+    sum.x = sum.x + i
+  }
+  i = i + 1
+}
+sum.x
+
+#피보나치수열
+
+pivo = vector("integer", 12)
+i=1
+pivo[1] <- 0
+pivo[2] <- 1
+while(i <= 10){
+  pivo[i + 2] = pivo[i] + pivo[i + 1]
+  i = i + 1
+}
+pivo
+
+
 
 # lapply(), sapply()
 # lapply() : 결과 리스트
@@ -897,36 +970,56 @@ sapply(x,mean)
 unlist(lapply(x,mean))
 
 set.seed(1234)
-m <- -2:2
-i = 1
+m <- -2 : 2
 res <- vector("double", length(m))
-
 for (i in seq_along(res)){
-  res[i] <- mean(rnorm(n=19, mean=m[i], sd=0.5))
+  res[i] <- mean(rnorm(n=10, mean=m[i], sd=0.5))
 }
 res
 
+m<- -2:2
+x <- lapply(m, rnorm, n=10, sd=0.5)
+sapply(x,mean)
+
+y <- lapply(m, rnorm, n=  10)
 y <- lapply(m, rnorm, n=10,sd=0.5)
 sapply(y,mean)
 
 #margin : 1 = 행방향, 2 = 열방향
 
 A <- matrix(c(0.8,1.3,1.0, 1.1, 1.3, 1.3, 0, 1.2, 0.2, 0.6, 1.4, 0.6), nrow=3)
+A
 rownames(A) <- c("Park", "Lee", "Kim")
 colnames(A) <- paste0("trial", 1:4)
-
+A
 apply(A,1,mean)
 apply(A,1,range)
 apply(A,2,mean)
 
+#' tapply 
+#' tapply(X, INDEX, FUN, simplify=TRUE)
+#' 
+#' * apply 정리
+#' lapply : list의 각 요소에 대해 함수 적용, 리스트로 처리
+#' sapply : s=simplify, lapply와의 유일한 차이점 = 벡터 형태로 단순하게 처리
+#' apply : list가 아닌 행렬을 받아서 처리
+#' tapply : tapply(x,f, 함수, simplify= TRUE)
+#' x 를 f (요인)별로 함수 처리, default : sapply처럼 simplify, simplify=FALSE -> lapply처럼
+
+library(dplyr)
+library(MASS)
+Cars93 %>% View()
+
 data(Cars93, package = "MASS")
+
 with(Cars93, tapply(MPG.city, Origin, mean))
 Cars93
 with(Cars93, tapply(MPG.city,Origin,mean,simplify = FALSE))
 
 x_g <- with(Cars93, split(MPG.city, Origin))
+x_g
 str(x_g)
-labbply(x_g,mean)
+lapply(x_g,mean)
 #split(A,B) : A를 B의 값 별로 분리
 rm(list=ls())
 library(dplyr)
@@ -937,4 +1030,98 @@ Cars93 %>%
   summarise(m=mean(MPG.city), n=n())
 
 
+airquality %>% View()
+airs <- airquality %>% 
+  dplyr::select(-Month, -Day)
+apply(airs,2,mean,na.rm=TRUE)
 
+# purrr 
+# map(.x, .f, ...): lapply와 비슷한데 더 개선된 기능
+
+library(tidyverse)
+
+x <- list(a1=1:5, a2=rnorm(5), a3=c(TRUE, FALSE, TRUE, TRUE))
+
+x
+lapply(x, mean)
+map(x,mean) #lapply와 동일하게 출력
+
+map_dbl(x,mean) # 벡터로 출력
+
+airs %>% 
+  map_dbl(function (x) sum(x, na.rm=TRUE)/sum(!is.na(x)))
+
+# map( )에서 가능한 기능
+# - 사용자 정의 함수의 시작인 function( )을 물결표(~)로 대치
+# - 한변수만사용되는함수인경우,변수대신점(.)또는.x사용
+
+airs %>% 
+  map_dbl(~ sum(.x,na.rm=TRUE) / sum(!is.na(.x)))
+
+df1 <- list(x1=1:3, x2=2:4, x3=3:6)
+df1
+map_int(df1,2) #인덱싱이 실행, 두번째 리스트가 출력
+
+df2 <- list(x1=rnorm(n=5, mean=-1), x2=rnorm(n=5, mean=1)) %>% map(summary)
+df2
+df2 %>% 
+  map_dbl("Mean")
+
+#map2 : 두개의 리스트를 입력 변수로 특정 함수를 반복 적용
+# map2 (.x,.y,.f, ...)
+# 두 개의 입력 리스트(벡터)길이가 같아야함, 길이가 1인 벡터의 경우만 순환법칙 적용
+
+mu <- c(x1= -5, x2= 5)
+sigma <- c(x1=2,x2=1)
+map2(.x=mu,.y=sigma, rnorm, n=5)
+#map2_dfc : 결과를 데이터프레임(tibble)러 츨력 : map2_dfc()
+
+map2_dfc(.x = mu, .y = sigma, rnorm, n=3)
+
+#------------------------------------------------------------------------------------------------------------
+
+#1
+rm(list=ls())
+pivo <- vector("integer", 12)
+pivo[1] = 0
+pivo[2] = 1
+i = 1
+
+for (i in 1:10) {
+  pivo[i+2] = pivo[i] + pivo[i+1]
+}
+i = 1
+pivo <- vector("integer", 12)
+pivo[1] = 0
+pivo[2] = 1
+while(i <= 10) {
+  pivo[i+2] = pivo[i] + pivo[i+1]
+  i = i + 1
+}
+
+#2
+library(dplyr)
+mtcars %>% select(mpg:wt) -> mtcars_a
+mtcars_a %>% View()
+
+#3
+#(1)
+airquality %>% View()
+airquality %>% select(c(Ozone:Temp, Month)) -> airs
+
+
+#(2)
+
+#(3)
+
+airs %>% group_by(Month) %>% 
+  summarise(across(Ozone:Temp, mean,na.rm=TRUE, .names = "{col}_Mean"))
+
+airs$Ozone %>% 
+
+
+#(4)
+rm(list=ls())
+airs %>% View()
+airs %>% group_by(Month) %>% 
+  summarise(across(Ozone:Temp, ~sum(is.na(.x))))
