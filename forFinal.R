@@ -1101,20 +1101,75 @@ while(i <= 10) {
 
 #2
 library(dplyr)
-mtcars %>% select(mpg:wt) -> mtcars_a
-mtcars_a %>% View()
+mtcars %>%
+  as_tibble() %>% 
+  select(mpg:wt) -> mtcars_a
+#(2)
+
+fun_mt = list(
+  Mean = mean,
+  SD = sd
+)
+fun_mt
+method = c("Mean", "SD")
+
+
+# 각 열의 평균과 표준편차 계산
+
+#2-2
+Mean <- sapply(mtcars_a, mean)
+SD <- sapply(mtcars_a, sd)
+data.frame(method=c("Mean","SD"), rbind(Mean, SD)) %>% as_tibble()
+
+#2-3
+rm(list=ls())
+Mean <- map_dbl(mtcars_a, mean) 
+SD <- map_dbl(mtcars_a, sd)
+data.frame(method=c("Mean","SD"), rbind(Mean, SD)) %>% as_tibble()
+# 새로운 데이터프레임 생성
+result_df <- data.frame(method = c("Mean", "SD"), rbind(means, sds))
+
+# 결과 출력
+print(result_df)
+
+
+mtcars_a %>% 
+  summarise(across(mpg:wt, list(Mean=~mean(.), SD=~sd(.))))
+
+  
+map_dbl(mtcars_a, mean)
+map_dbl(mtcars_a, sd)
 
 #3
+
+mtcars_a %>% map_dbl(~ c(mean(.x, na.rm=TRUE), sd(.x, na.rm=TRUE)))
+
 #(1)
+library(tidyverse)
 airquality %>% View()
-airquality %>% select(c(Ozone:Temp, Month)) -> airs
+airquality %>% select(c(Ozone:Temp, Month)) -> airs 
+airquality
+?split
+airs <- with(airquality, split(Month))
 
-
+airquality %>% group_by(Month) %>% 
+  select(Ozone:Temp) %>% 
+  map(., mean, na.rm=TRUE)
+  
+with(airquality, map(Ozone:Temp, Month, mean))
+airquality %>% 
+  split(Month) %>% 
+  map_dbl(~ mean(.x))
+split
+mtcars_a %>% map_dbl(~ c(mean(.x, na.rm=TRUE), sd(.x, na.rm=TRUE)))
 #(2)
 
 #(3)
 
-airs %>% group_by(Month) %>% 
+
+
+airquality %>% split(Month) %>% 
+  select(Ozone:Temp) 
   summarise(across(Ozone:Temp, mean,na.rm=TRUE, .names = "{col}_Mean"))
 
 airs$Ozone %>% 
@@ -1125,3 +1180,7 @@ rm(list=ls())
 airs %>% View()
 airs %>% group_by(Month) %>% 
   summarise(across(Ozone:Temp, ~sum(is.na(.x))))
+
+
+
+
